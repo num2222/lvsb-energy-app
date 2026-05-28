@@ -209,52 +209,62 @@ def index():
     meta = load_meta()
     return render_template('index.html', lvsbs=LVSBS, meta=meta)
 
-@app.route('/save_lvsb', methods=['POST'])
-def save_lvsb():
-    lid = request.form.get('lid')
-    if not lid:
-        return jsonify({'ok': False})
-    meta = load_meta()
-    meta.setdefault('lvsbs', {})
-    meta['month_th'] = request.form.get('month_th', meta.get('month_th', ''))
-    meta['year_th']  = request.form.get('year_th',  meta.get('year_th', ''))
-    entry = meta['lvsbs'].get(lid, {})
-    entry['date']  = request.form.get('date', '')
-    entry['kwh']   = request.form.get('kwh', '')
-    entry['saved'] = True
-    saved_imgs = list(entry.get('images', []))
-    d = img_dir(lid)
-    for f in request.files.getlist('photos'):
-        if not f or not f.filename:
-            continue
-        if len(saved_imgs) >= 12:
-            break
-        fname = f'{len(saved_imgs):02d}_{f.filename.replace("/","_")}.jpg'
-        with open(os.path.join(d, fname), 'wb') as out:
-            out.write(resize_image_square(f.read()))
-        saved_imgs.append(fname)
-    entry['images'] = saved_imgs
-    meta['lvsbs'][lid] = entry
-    save_meta(meta)
-    return jsonify({'ok': True, 'img_count': len(saved_imgs)})
+# แทนที่โค้ดบันทึกรูปเดิมด้วยโค้ดนี้:
+for f in request.files.getlist("photos"):
+    if not f or not f.filename: continue
+    if len(saved_imgs) >= 12: break
+    img_bytes = resize_image_square(f.read())
+    fname = f"{len(saved_imgs):02d}_{f.filename.replace('/','_')}.jpg"
+ 
+    if GDRIVE_FOLDER_ID:
+        # บันทึก temp แล้ว upload ไป Drive
+        with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
+            tmp.write(img_bytes)
+            tmp_path = tmp.name
+        file_id = upload_to_drive(tmp_path, fname, GDRIVE_FOLDER_ID)
+        os.unlink(tmp_path)
+        if file_id:
+            saved_imgs.append({"fname": fname, "drive_id": file_id})
+    else:
+        # Fallback: บันทึก Local
+        fpath = os.path.join(img_dir(lid), fname)
+        with open(fpath, "wb") as out: out.write(img_bytes)
+        saved_imgs.append({"fname": fname, "drive_id": None})
+
 
 @app.route('/delete_image', methods=['POST'])
+@app.route("/image/<lid>/<fname>")
+def serve_image(lid, fname):
+    entry = load_meta().get("lvsbs",{}).get(lid,{})
+    img_info = next((i for i in entry.get("images",[]) if i["fname"]==fname), None)
+    if not img_info: return "not found", 404
+    if img_info.get("drive_id"):
+        data = download_from_drive(img_info["drive_id"])
+        if data: return send_file(io.BytesIO(data), mimetype="image/jpeg")
+    fpath = os.path.join(img_dir(lid), fname)
+    if os.path.exists(fpath): return send_file(fpath, mimetype="image/jpeg")
+    return "not found", 404
+ 
+@app.route("/delete_image", methods=["POST"])
 def delete_image():
     data  = request.get_json()
-    lid   = data.get('lid')
-    fname = data.get('fname')
+    lid   = data.get("lid")
+fname = data.get("fname")
     meta  = load_meta()
-    entry = meta.get('lvsbs', {}).get(lid, {})
-    imgs  = entry.get('images', [])
-    fpath = os.path.join(img_dir(lid), fname)
-    if os.path.exists(fpath):
-        os.remove(fpath)
-    if fname in imgs:
-        imgs.remove(fname)
-    entry['images'] = imgs
-    meta['lvsbs'][lid] = entry
+    entry = meta.get("lvsbs",{}).get(lid,{})
+    imgs  = entry.get("images",[])
+    img_info = next((i for i in imgs if i["fname"]==fname), None)
+    if img_info:
+        if img_info.get("drive_id"): delete_from_drive(img_info["drive_id"])
+        else:
+            fpath = os.path.join(img_dir(lid), fname)
+            if os.path.exists(fpath): os.remove(fpath)
+        imgs.remove(img_info)
+    entry["images"] = imgs
+    meta["lvsbs"][lid] = entry
     save_meta(meta)
-    return jsonify({'ok': True, 'img_count': len(imgs)})
+    return jsonify({"ok": True, "img_count": len(imgs)})
+
 
 @app.route('/get_state')
 def get_state():
@@ -344,3 +354,42 @@ if __name__ == '__main__':
     print("  เปิดเบราว์เซอร์ไปที่: http://localhost:5050")
     print("="*55 + "\n")
     app.run(debug=False, port=5050)
+# เพิ่ม imports เหล่านี้ที่ด้านบนของ app.py (ต่อจาก import เดิม)
+import base64, tempfile
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
+from google.oauth2 import service_account
+ 
+GDRIVE_FOLDER_ID = os.environ.get("GDRIVE_FOLDER_ID", "")
+ 
+def get_drive_service():
+    b64 = os.environ.get("GDRIVE_CREDENTIALS_B64", "")
+    if not b64: return None
+    creds_json = base64.b64decode(b64).decode("utf-8")
+    creds_dict = json.loads(creds_json)
+    creds = service_account.Credentials.from_service_account_info(
+        creds_dict, scopes=["https://www.googleapis.com/auth/drive"])
+    return build("drive", "v3", credentials=creds)
+ 
+def upload_to_drive(local_path, filename, folder_id):
+    svc = get_drive_service()
+    if not svc: return None
+    meta = {"name": filename, "parents": [folder_id]}
+    media = MediaFileUpload(local_path, mimetype="image/jpeg")
+    f = svc.files().create(body=meta, media_body=media, fields="id").execute()
+    return f.get("id")
+ 
+def download_from_drive(file_id):
+    svc = get_drive_service()
+    if not svc: return None
+    req = svc.files().get_media(fileId=file_id)
+    buf = io.BytesIO()
+    dl = MediaIoBaseDownload(buf, req)
+    done = False
+    while not done: _, done = dl.next_chunk()
+buf.seek(0)
+    return buf.read()
+ 
+def delete_from_drive(file_id):
+    svc = get_drive_service()
+    if svc: svc.files().delete(fileId=file_id).execute()
