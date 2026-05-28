@@ -6,379 +6,390 @@
 <title>LVSB Energy Report</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Sarabun', 'Segoe UI', sans-serif; background: #f0f4f8; color: #1a2332; min-height: 100vh; }
-
-.topbar { background: #1a3a5c; color: white; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-.topbar-left { display: flex; align-items: center; gap: 12px; }
-.topbar h1 { font-size: 16px; font-weight: 700; }
+body { font-family: 'Sarabun','Segoe UI',sans-serif; background: #f0f4f8; color: #1a2332; }
+.topbar { background: #1a3a5c; color: white; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.topbar h1 { font-size: 15px; font-weight: 700; }
 .topbar p { font-size: 11px; opacity: 0.65; margin-top: 1px; }
-.btn-reset { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 6px 14px; border-radius: 6px; font-size: 12px; cursor: pointer; font-family: inherit; }
-.btn-reset:hover { background: rgba(255,255,255,0.2); }
-
-.container { max-width: 920px; margin: 0 auto; padding: 20px 16px 60px; }
-
-/* Month card */
-.month-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 18px 22px; margin-bottom: 16px; display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
+.btn-sm { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; font-family: inherit; }
+.container { max-width: 900px; margin: 0 auto; padding: 16px 14px 60px; }
+.month-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 16px 20px; margin-bottom: 14px; display: flex; gap: 14px; align-items: flex-end; flex-wrap: wrap; }
 .mfield { display: flex; flex-direction: column; gap: 5px; }
-.mfield label { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
-.mfield select, .mfield input { border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; font-size: 14px; font-family: inherit; color: #1a2332; background: white; }
-.mfield select:focus, .mfield input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-
-/* Progress dots */
-.prog-wrap { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 14px 22px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.prog-dot { width: 36px; height: 36px; border-radius: 50%; background: #f1f5f9; border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #94a3b8; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
-.prog-dot:hover { border-color: #93c5fd; }
-.prog-dot.done { background: #dcfce7; border-color: #86efac; color: #16a34a; }
-.prog-dot.active { border-color: #3b82f6; background: #eff6ff; color: #2563eb; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
-.prog-text { font-size: 13px; color: #64748b; margin-left: 4px; }
-.prog-text strong { color: #1a2332; }
-
-/* Tabs */
-.tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-.tab { padding: 8px 16px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; background: white; color: #64748b; transition: all 0.15s; font-family: inherit; display: flex; align-items: center; gap: 6px; }
-.tab:hover { background: #f8fafc; }
-.tab.active { background: #eff6ff; border-color: #3b82f6; color: #2563eb; }
-.tab .ck { color: #16a34a; }
-.tab .cnt { background: #e2e8f0; color: #475569; border-radius: 10px; padding: 1px 7px; font-size: 11px; }
-.tab.done .cnt { background: #dcfce7; color: #16a34a; }
-
-/* Panel */
-.panel { background: white; border-radius: 14px; border: 1px solid #e2e8f0; padding: 22px; }
-.panel-header { margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; justify-content: space-between; }
-.panel-title { font-size: 17px; font-weight: 700; color: #1a2332; margin-bottom: 3px; }
-.panel-sub { font-size: 13px; color: #64748b; }
-.saved-pill { background: #dcfce7; color: #16a34a; border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; white-space: nowrap; }
-
-.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-.fld { display: flex; flex-direction: column; gap: 5px; }
-.fld label { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
-.fld input { border: 1px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 14px; font-family: inherit; }
-.fld input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
-
-.sec-label { font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-.sec-label span { font-size: 12px; color: #94a3b8; font-weight: 400; text-transform: none; letter-spacing: 0; }
-
-/* Upload grid */
-.upload-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 18px; }
-.slot { border: 2px dashed #cbd5e1; border-radius: 10px; aspect-ratio: 4/3; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; background: #fafafa; transition: all 0.15s; }
-.slot:hover { border-color: #93c5fd; background: #eff6ff22; }
-.slot.filled { border: 2px solid #86efac; background: white; }
-.slot input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-.slot-ico { font-size: 24px; color: #cbd5e1; }
-.slot-lbl { font-size: 11px; color: #94a3b8; margin-top: 5px; }
-.slot-img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
-.slot-bar { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.55); padding: 4px 6px; }
-.slot-name { font-size: 10px; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
-.slot-del { position: absolute; top: 4px; right: 4px; background: rgba(239,68,68,0.9); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 12px; cursor: pointer; line-height: 22px; text-align: center; z-index: 5; display: none; }
-.slot.filled:hover .slot-del { display: block; }
-
-/* Add more button */
-.add-more { border: 2px dashed #cbd5e1; border-radius: 10px; aspect-ratio: 4/3; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; background: #fafafa; color: #94a3b8; font-size: 11px; gap: 4px; transition: all 0.15s; }
-.add-more:hover { border-color: #93c5fd; color: #3b82f6; background: #eff6ff22; }
-.add-more input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-
-/* Save button */
-.save-row { display: flex; align-items: center; gap: 12px; }
-.btn-save { padding: 11px 28px; background: #2563eb; color: white; border: none; border-radius: 9px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.15s; }
-.btn-save:hover { background: #1d4ed8; }
-.btn-save:disabled { background: #94a3b8; cursor: not-allowed; }
-.save-note { font-size: 12px; color: #94a3b8; }
-
-/* Export card */
-.export-card { background: white; border-radius: 14px; border: 1px solid #e2e8f0; padding: 22px; margin-top: 18px; }
-.export-card h2 { font-size: 16px; font-weight: 700; margin-bottom: 5px; }
-.export-card p { font-size: 13px; color: #64748b; margin-bottom: 16px; }
-.stat-row { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
-.stat { background: #f8fafc; border-radius: 10px; padding: 12px 18px; text-align: center; min-width: 90px; border: 1px solid #e2e8f0; }
+.mfield label { font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+.mfield select, .mfield input { border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 10px; font-size: 14px; font-family: inherit; }
+.stats-bar { background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 12px 20px; margin-bottom: 14px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.stat { text-align: center; min-width: 60px; }
 .stat-v { font-size: 24px; font-weight: 800; }
 .stat-v.g { color: #16a34a; }
 .stat-v.a { color: #d97706; }
-.stat-l { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-.btn-export { padding: 13px 32px; background: #16a34a; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 8px; transition: background 0.15s; }
+.stat-l { font-size: 10px; color: #94a3b8; margin-top: 1px; }
+.prog-wrap { flex: 1; min-width: 180px; }
+.prog-track { height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+.prog-fill { height: 10px; background: linear-gradient(90deg,#16a34a,#4ade80); border-radius: 5px; transition: width 0.4s; width: 0%; }
+.prog-label { font-size: 12px; color: #64748b; margin-top: 5px; }
+.filter-bar { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.search-wrap { flex: 1; min-width: 200px; position: relative; }
+.search-wrap input { width: 100%; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 14px 10px 38px; font-size: 14px; font-family: inherit; background: white; }
+.search-wrap input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 15px; pointer-events: none; }
+.filter-btns { display: flex; gap: 6px; }
+.fbtn { padding: 8px 14px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; cursor: pointer; background: white; color: #64748b; font-family: inherit; white-space: nowrap; transition: all 0.15s; }
+.fbtn:hover { background: #f8fafc; }
+.fbtn.active { font-weight: 700; }
+.fbtn.f-all.active    { background: #eff6ff; border-color: #3b82f6; color: #2563eb; }
+.fbtn.f-done.active   { background: #dcfce7; border-color: #86efac; color: #16a34a; }
+.fbtn.f-todo.active   { background: #fff7ed; border-color: #fed7aa; color: #d97706; }
+.list-wrap { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; margin-bottom: 14px; }
+.list-header { padding: 10px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; font-size: 12px; color: #64748b; font-weight: 600; display: flex; justify-content: space-between; }
+.list-body { max-height: 55vh; overflow-y: auto; }
+.lvsb-row { display: flex; align-items: center; padding: 11px 16px; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: background 0.1s; gap: 10px; }
+.lvsb-row:last-child { border-bottom: none; }
+.lvsb-row:hover { background: #f8fafc; }
+.lvsb-row.is-active { background: #eff6ff; border-left: 3px solid #3b82f6; padding-left: 13px; }
+.lvsb-row.is-done { border-left: 3px solid #86efac; padding-left: 13px; }
+.row-no { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; background: #f1f5f9; color: #64748b; }
+.row-no.done { background: #dcfce7; color: #16a34a; }
+.row-no.todo { background: #fff7ed; color: #d97706; }
+.row-info { flex: 1; min-width: 0; }
+.row-name { font-size: 14px; color: #1a2332; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row-detail { font-size: 11px; color: #94a3b8; margin-top: 2px; display: flex; gap: 8px; flex-wrap: wrap; }
+.row-status { flex-shrink: 0; text-align: right; }
+.status-pill { display: inline-flex; align-items: center; gap: 4px; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700; }
+.status-done { background: #dcfce7; color: #16a34a; }
+.status-todo { background: #fff7ed; color: #d97706; }
+.img-badge { background: #e0f2fe; color: #0369a1; border-radius: 10px; padding: 2px 7px; font-size: 11px; font-weight: 600; }
+.img-badge.has { background: #dcfce7; color: #16a34a; }
+.no-results { padding: 32px; text-align: center; color: #94a3b8; font-size: 14px; }
+.panel { background: white; border-radius: 14px; border: 1px solid #e2e8f0; padding: 20px; display: none; }
+.panel.show { display: block; }
+.panel-header { margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.panel-title { font-size: 16px; font-weight: 700; color: #1a2332; margin-bottom: 2px; }
+.panel-sub { font-size: 12px; color: #94a3b8; }
+.saved-pill { background: #dcfce7; color: #16a34a; border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 700; flex-shrink: 0; white-space: nowrap; }
+.btn-back { background: none; border: 1px solid #e2e8f0; border-radius: 8px; padding: 7px 14px; font-size: 13px; cursor: pointer; color: #64748b; font-family: inherit; margin-bottom: 14px; display: inline-flex; align-items: center; gap: 6px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.fld { display: flex; flex-direction: column; gap: 5px; }
+.fld label { font-size: 11px; color: #64748b; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+.fld input { border: 1px solid #cbd5e1; border-radius: 8px; padding: 9px 12px; font-size: 14px; font-family: inherit; }
+.fld input:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+.sec-label { font-size: 11px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+.upload-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(120px,1fr)); gap: 8px; margin-bottom: 16px; }
+.slot { border: 2px dashed #cbd5e1; border-radius: 10px; aspect-ratio: 4/3; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; background: #fafafa; transition: all 0.15s; }
+.slot:hover { border-color: #93c5fd; }
+.slot.filled { border: 2px solid #86efac; }
+.slot input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.slot-ico { font-size: 22px; color: #cbd5e1; }
+.slot-lbl { font-size: 10px; color: #94a3b8; margin-top: 4px; }
+.slot-img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.slot-bar { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.55); padding: 3px 5px; }
+.slot-name { font-size: 9px; color: white; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center; }
+.slot-del { position: absolute; top: 3px; right: 3px; background: rgba(239,68,68,0.9); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; cursor: pointer; line-height: 20px; text-align: center; z-index: 5; display: none; }
+.slot.filled:hover .slot-del { display: block; }
+.add-more { border: 2px dashed #cbd5e1; border-radius: 10px; aspect-ratio: 4/3; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; position: relative; background: #fafafa; color: #94a3b8; font-size: 11px; gap: 3px; transition: all 0.15s; }
+.add-more:hover { border-color: #93c5fd; color: #3b82f6; }
+.add-more input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.save-row { display: flex; align-items: center; gap: 10px; }
+.btn-save { padding: 10px 24px; background: #2563eb; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.btn-save:hover { background: #1d4ed8; }
+.export-card { background: white; border-radius: 14px; border: 1px solid #e2e8f0; padding: 20px; margin-top: 14px; }
+.export-card h2 { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
+.export-card p { font-size: 13px; color: #64748b; margin-bottom: 14px; }
+.btn-export { padding: 12px 28px; background: #16a34a; color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
 .btn-export:hover { background: #15803d; }
-.btn-export:disabled { background: #94a3b8; cursor: not-allowed; }
-
-.toast { position: fixed; bottom: 24px; right: 24px; background: #1a2332; color: white; padding: 12px 20px; border-radius: 10px; font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; }
+.toast { position: fixed; bottom: 20px; right: 20px; background: #1a2332; color: white; padding: 11px 18px; border-radius: 10px; font-size: 13px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; max-width: 280px; }
 .toast.show { opacity: 1; }
-
-@media (max-width: 600px) {
-  .row2 { grid-template-columns: 1fr; }
-  .upload-grid { grid-template-columns: repeat(3, 1fr); }
-  .topbar { flex-wrap: wrap; gap: 8px; }
-}
+@media (max-width:600px) { .row2 { grid-template-columns: 1fr; } .upload-grid { grid-template-columns: repeat(3,1fr); } }
 </style>
 </head>
 <body>
-
 <div class="topbar">
-  <div class="topbar-left">
-    <span style="font-size:22px">⚡</span>
-    <div>
-      <h1>LVSB Energy Report</h1>
-      <p>ท่าอากาศยานสุวรรณภูมิ — บันทึกค่าพลังงานประจำเดือน</p>
-    </div>
+  <div>
+    <h1>⚡ LVSB Energy Report</h1>
+    <p>ท่าอากาศยานสุวรรณภูมิ — 129 ตู้</p>
   </div>
-  <button class="btn-reset" onclick="confirmReset()">🗑 ล้างข้อมูลทั้งหมด</button>
+  <button class="btn-sm" onclick="confirmReset()">🗑 ล้างข้อมูล</button>
 </div>
 
 <div class="container">
-
   <div class="month-card">
     <div class="mfield">
       <label>เดือน</label>
       <select id="month_th">
-        {% for m in ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'] %}
-        <option value="{{ m }}" {% if m == meta.month_th %}selected{% endif %}>{{ m }}</option>
-        {% endfor %}
+        <option value="มกราคม">มกราคม</option>
+        <option value="กุมภาพันธ์">กุมภาพันธ์</option>
+        <option value="มีนาคม">มีนาคม</option>
+        <option value="เมษายน">เมษายน</option>
+        <option value="พฤษภาคม">พฤษภาคม</option>
+        <option value="มิถุนายน">มิถุนายน</option>
+        <option value="กรกฎาคม">กรกฎาคม</option>
+        <option value="สิงหาคม">สิงหาคม</option>
+        <option value="กันยายน">กันยายน</option>
+        <option value="ตุลาคม">ตุลาคม</option>
+        <option value="พฤศจิกายน">พฤศจิกายน</option>
+        <option value="ธันวาคม">ธันวาคม</option>
       </select>
     </div>
     <div class="mfield">
       <label>ปี (พ.ศ.)</label>
-      <input type="number" id="year_th" value="{{ meta.year_th }}" style="width:110px">
+      <input type="number" id="year_th" style="width:100px">
     </div>
-    <div style="font-size:12px; color:#94a3b8; padding-bottom:2px">ข้อมูลบันทึกอัตโนมัติ<br>แม้ปิดแอปแล้วยังคงอยู่</div>
+    <div style="font-size:12px;color:#94a3b8;line-height:1.6">ข้อมูลบันทึกอัตโนมัติ<br>ปิดแอปแล้วยังอยู่</div>
   </div>
 
-  <div class="prog-wrap">
-    {% for l in lvsbs %}
-    <div class="prog-dot" id="dot-{{ l.id }}" onclick="switchTab('{{ l.id }}')" title="{{ l.name }}">{{ l.id }}</div>
-    {% endfor %}
-    <div class="prog-text" id="prog-text"><strong>0</strong> / {{ lvsbs|length }} ตู้บันทึกแล้ว</div>
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-v g" id="st-done">0</div><div class="stat-l">ทำแล้ว</div></div>
+    <div class="stat"><div class="stat-v a" id="st-pend">129</div><div class="stat-l">ยังไม่ทำ</div></div>
+    <div class="stat"><div class="stat-v" id="st-imgs">0</div><div class="stat-l">รูปทั้งหมด</div></div>
+    <div class="prog-wrap">
+      <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+      <div class="prog-label" id="prog-label">0 / 129 ตู้</div>
+    </div>
   </div>
 
-  <div class="tabs" id="tabs">
-    {% for l in lvsbs %}
-    <button class="tab{% if loop.first %} active{% endif %}" id="tab-{{ l.id }}" onclick="switchTab('{{ l.id }}')" type="button">
-      {{ l.name }}
-      <span class="cnt" id="cnt-{{ l.id }}">0</span>
-    </button>
-    {% endfor %}
+  <div id="list-view">
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-box" placeholder="ค้นหา เช่น SS5, Field, ZONE, 79..." oninput="renderList()">
+      </div>
+      <div class="filter-btns">
+        <button class="fbtn f-all active" id="fbtn-all"  onclick="setFilter('all')">ทั้งหมด</button>
+        <button class="fbtn f-done"       id="fbtn-done" onclick="setFilter('done')">✓ ทำแล้ว</button>
+        <button class="fbtn f-todo"       id="fbtn-todo" onclick="setFilter('todo')">⏳ ยังไม่ทำ</button>
+      </div>
+    </div>
+    <div class="list-wrap">
+      <div class="list-header">
+        <span>รายการตู้</span>
+        <span id="list-count">129 รายการ</span>
+      </div>
+      <div class="list-body" id="lvsb-list"></div>
+    </div>
   </div>
 
-  {% for l in lvsbs %}
-  <div class="panel" id="panel-{{ l.id }}" {% if not loop.first %}style="display:none"{% endif %}>
+  <div class="panel" id="detail-panel">
+    <button class="btn-back" onclick="backToList()">← กลับรายการ</button>
     <div class="panel-header">
       <div>
-        <div class="panel-title">🏭 {{ l.name }}</div>
-        <div class="panel-sub">PF {{ l.pf }} &nbsp;|&nbsp; Breaker: Total {{ l.total }} / Closed {{ l.closed }} / Open {{ l.open }}</div>
+        <div class="panel-title" id="d-title"></div>
+        <div class="panel-sub" id="d-sub"></div>
       </div>
-      <div class="saved-pill" id="pill-{{ l.id }}" style="display:none">✅ บันทึกแล้ว</div>
-    </div>
-
-    <div class="row2">
-      <div class="fld">
-        <label>📅 วันที่ตรวจ</label>
-        <input type="date" id="date-{{ l.id }}">
-      </div>
+      <div class="saved-pill" id="d-pill" style="display:none">✅ บันทึกแล้ว</div>
     </div>
     <div class="row2">
-      <div class="fld">
-        <label>⚡ kWh เดือนก่อน</label>
-        <input type="number" step="0.01" id="kwh_prev-{{ l.id }}" placeholder="0.00">
-      </div>
-      <div class="fld">
-        <label>⚡ kWh เดือนนี้</label>
-        <input type="number" step="0.01" id="kwh_curr-{{ l.id }}" placeholder="0.00">
-      </div>
+      <div class="fld"><label>📅 วันที่เข้าตรวจสอบ</label><input type="date" id="d-date"></div>
+      <div class="fld"><label>⚡ ค่า kWh</label><input type="number" step="0.01" id="d-kwh" placeholder="0.00"></div>
     </div>
-
-    <div class="sec-label">
-      📷 รูปภาพประกอบ
-      <span id="img-count-{{ l.id }}">0 รูป (สูงสุด 12)</span>
-    </div>
-    <div class="upload-grid" id="grid-{{ l.id }}"></div>
-
+    <div class="sec-label">📷 รูปภาพประกอบ<span id="d-img-count">0 รูป (สูงสุด 12)</span></div>
+    <div class="upload-grid" id="d-grid"></div>
     <div class="save-row">
-      <button class="btn-save" onclick="saveLvsb('{{ l.id }}')">💾 บันทึกตู้นี้</button>
-      <span class="save-note">ข้อมูลและรูปจะถูกเซฟลงเครื่อง</span>
+      <button class="btn-save" onclick="saveActive()">💾 บันทึก</button>
+      <span style="font-size:12px;color:#94a3b8">ข้อมูลและรูปจะเซฟลงเครื่อง</span>
     </div>
   </div>
-  {% endfor %}
 
   <div class="export-card">
     <h2>📊 Export รายงาน Excel</h2>
-    <p>รูปภาพจะฝังลงใน Sheet ของแต่ละตู้อัตโนมัติ สามารถ Export ได้ทุกเมื่อ แม้ยังบันทึกไม่ครบ</p>
-    <div class="stat-row">
-      <div class="stat"><div class="stat-v g" id="st-done">0</div><div class="stat-l">บันทึกแล้ว</div></div>
-      <div class="stat"><div class="stat-v a" id="st-pend">5</div><div class="stat-l">ยังไม่บันทึก</div></div>
-      <div class="stat"><div class="stat-v" id="st-imgs">0</div><div class="stat-l">รูปทั้งหมด</div></div>
-    </div>
-    <a href="/export" id="export-btn">
-      <button class="btn-export">⬇️ ดาวน์โหลด Excel</button>
-    </a>
+    <p>วันที่และค่า kWh จะลงหน้า Main Sheet อัตโนมัติ รูปจะฝังใน Sheet แต่ละตู้</p>
+    <a href="/export" class="btn-export">⬇️ ดาวน์โหลด Excel</a>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 
 <script>
 const LVSBS = {{ lvsbs|tojson }};
-let activeTab = LVSBS[0].id;
-const state = {}; // lid -> { date, kwh_prev, kwh_curr, saved, images:[{fname, url}] }
-LVSBS.forEach(l => state[l.id] = { date:'', kwh_prev:'', kwh_curr:'', saved:false, images:[] });
+let activeId = null;
+let curFilter = 'all';
+const state = {};
+LVSBS.forEach(l => { state[l.id] = { date:'', kwh:'', saved:false, images:[] }; });
+
+// ── Set default month/year to current Thai month/year ──
+function initMonthYear(savedMonth, savedYear) {
+  const now = new Date();
+  const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+                  'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  const thaiYear = now.getFullYear() + 543;
+  const sel = document.getElementById('month_th');
+  sel.value = savedMonth || months[now.getMonth()];
+  document.getElementById('year_th').value = savedYear || thaiYear;
+}
 
 function showToast(msg, ms=2500) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), ms);
 }
 
-// ─── Render grid for one LVSB ───
-function renderGrid(lid) {
-  const grid = document.getElementById('grid-' + lid);
-  const imgs = state[lid].images;
-  let html = '';
-  imgs.forEach((img, i) => {
-    html += `<div class="slot filled" id="imgslot-${lid}-${i}">
-      <img src="${img.url}" class="slot-img" alt="รูป">
-      <div class="slot-bar"><div class="slot-name">${img.fname}</div></div>
-      <button class="slot-del" onclick="deleteImg('${lid}','${img.fname}',${i})" type="button">✕</button>
-    </div>`;
+function setFilter(f) {
+  curFilter = f;
+  ['all','done','todo'].forEach(x => {
+    document.getElementById('fbtn-'+x).classList.toggle('active', x === f);
   });
+  renderList();
+}
+
+function renderList() {
+  const q = document.getElementById('search-box').value.toLowerCase().trim();
+  let items = LVSBS;
+
+  // Filter by status
+  if (curFilter === 'done') items = items.filter(l => state[l.id].saved);
+  if (curFilter === 'todo') items = items.filter(l => !state[l.id].saved);
+
+  // Filter by search — search name AND id AND sheet name
+  if (q) {
+    items = items.filter(l =>
+      l.name.toLowerCase().includes(q) ||
+      String(l.id).includes(q) ||
+      l.sheet.toLowerCase().includes(q)
+    );
+  }
+
+  document.getElementById('list-count').textContent = items.length + ' รายการ';
+  const el = document.getElementById('lvsb-list');
+  if (!items.length) {
+    el.innerHTML = '<div class="no-results">ไม่พบรายการที่ค้นหา</div>';
+    return;
+  }
+
+  el.innerHTML = items.map(l => {
+    const s = state[l.id];
+    const ic = s.images.length;
+    const isActive = activeId === l.id;
+    const isDone = s.saved;
+    return `<div class="lvsb-row ${isActive ? 'is-active' : isDone ? 'is-done' : ''}" onclick="openDetail('${l.id}')">
+      <div class="row-no ${isDone ? 'done' : 'todo'}">${l.id}</div>
+      <div class="row-info">
+        <div class="row-name">${l.name}</div>
+        <div class="row-detail">
+          ${s.date ? '<span>📅 ' + s.date.split('-').reverse().join('/') + '</span>' : '<span style="color:#cbd5e1">ยังไม่ได้บันทึกวันที่</span>'}
+          ${s.kwh  ? '<span>⚡ ' + s.kwh + ' kWh</span>' : ''}
+          <span class="img-badge ${ic>0?'has':''}">📷 ${ic} รูป</span>
+        </div>
+      </div>
+      <div class="row-status">
+        <span class="status-pill ${isDone ? 'status-done' : 'status-todo'}">
+          ${isDone ? '✓ ทำแล้ว' : '⏳ ยังไม่ทำ'}
+        </span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openDetail(lid) {
+  activeId = lid;
+  const lvsb = LVSBS.find(l => l.id === lid);
+  const s = state[lid];
+  document.getElementById('d-title').textContent = 'No.' + lvsb.id + '  ' + lvsb.name;
+  document.getElementById('d-sub').textContent = lvsb.sheet;
+  document.getElementById('d-date').value = s.date || '';
+  document.getElementById('d-kwh').value  = s.kwh  || '';
+  document.getElementById('d-pill').style.display = s.saved ? 'block' : 'none';
+  renderDetailGrid(lid);
+  document.getElementById('list-view').style.display = 'none';
+  document.getElementById('detail-panel').classList.add('show');
+  window.scrollTo(0, 0);
+}
+
+function backToList() {
+  activeId = null;
+  document.getElementById('list-view').style.display = 'block';
+  document.getElementById('detail-panel').classList.remove('show');
+  renderList();
+}
+
+function renderDetailGrid(lid) {
+  const imgs = state[lid].images;
+  let html = imgs.map((img, i) =>
+    `<div class="slot filled">
+      <img src="${img.url}" class="slot-img" alt="รูป ${i+1}">
+      <div class="slot-bar"><div class="slot-name">${img.fname}</div></div>
+      <button class="slot-del" onclick="deleteImg('${lid}','${img.fname}')" type="button">✕</button>
+    </div>`
+  ).join('');
   if (imgs.length < 12) {
     html += `<div class="add-more">
       <input type="file" accept="image/*" multiple onchange="uploadImgs(event,'${lid}')">
-      <span style="font-size:22px">➕</span>
-      <span>เพิ่มรูป</span>
+      <span style="font-size:22px">➕</span><span>เพิ่มรูป</span>
     </div>`;
   }
-  grid.innerHTML = html;
-  document.getElementById('img-count-' + lid).textContent = `${imgs.length} รูป (สูงสุด 12)`;
-  document.getElementById('cnt-' + lid).textContent = imgs.length;
+  document.getElementById('d-grid').innerHTML = html;
+  document.getElementById('d-img-count').textContent = imgs.length + ' รูป (สูงสุด 12)';
 }
 
-// ─── Load state from server ───
-async function loadState() {
-  const res = await fetch('/get_state');
-  const meta = await res.json();
-
-  // Set month/year
-  if (meta.month_th) document.getElementById('month_th').value = meta.month_th;
-  if (meta.year_th) document.getElementById('year_th').value = meta.year_th;
-
-  const lvsbs_data = meta.lvsbs || {};
-  LVSBS.forEach(l => {
-    const e = lvsbs_data[l.id] || {};
-    state[l.id].date = e.date || '';
-    state[l.id].kwh_prev = e.kwh_prev || '';
-    state[l.id].kwh_curr = e.kwh_curr || '';
-    state[l.id].saved = !!e.saved;
-    state[l.id].images = (e.images || []).map(fname => ({
-      fname, url: `/image/${l.id}/${fname}`
-    }));
-    // Restore form fields
-    if (e.date) document.getElementById('date-' + l.id).value = e.date;
-    if (e.kwh_prev) document.getElementById('kwh_prev-' + l.id).value = e.kwh_prev;
-    if (e.kwh_curr) document.getElementById('kwh_curr-' + l.id).value = e.kwh_curr;
-    renderGrid(l.id);
-  });
-  updateAll();
-}
-
-// ─── Upload new images ───
 async function uploadImgs(e, lid) {
   const files = Array.from(e.target.files);
   if (!files.length) return;
-  const remaining = 12 - state[lid].images.length;
-  const toUpload = files.slice(0, remaining);
-
   const fd = new FormData();
   fd.append('lid', lid);
   fd.append('month_th', document.getElementById('month_th').value);
   fd.append('year_th', document.getElementById('year_th').value);
-  fd.append('date', document.getElementById('date-' + lid).value);
-  fd.append('kwh_prev', document.getElementById('kwh_prev-' + lid).value);
-  fd.append('kwh_curr', document.getElementById('kwh_curr-' + lid).value);
-  toUpload.forEach(f => fd.append('photos', f));
-
-  showToast('⏳ กำลังอัปโหลดรูป...');
-  const res = await fetch('/save_lvsb', { method: 'POST', body: fd });
-  const data = await res.json();
-  if (data.ok) {
-    await loadState();
-    showToast(`✅ อัปโหลด ${toUpload.length} รูป สำเร็จ`);
-  }
+  fd.append('date', document.getElementById('d-date').value);
+  fd.append('kwh', document.getElementById('d-kwh').value);
+  files.slice(0, 12 - state[lid].images.length).forEach(f => fd.append('photos', f));
+  showToast('⏳ กำลังอัปโหลด...');
+  const data = await fetch('/save_lvsb', {method:'POST', body:fd}).then(r => r.json());
+  if (data.ok) { await loadState(); renderDetailGrid(lid); showToast('✅ อัปโหลดสำเร็จ'); }
 }
 
-// ─── Delete one image ───
-async function deleteImg(lid, fname, idx) {
+async function deleteImg(lid, fname) {
   if (!confirm('ลบรูปนี้?')) return;
-  const res = await fetch('/delete_image', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({lid, fname})
-  });
-  const data = await res.json();
+  const data = await fetch('/delete_image', {
+    method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({lid, fname})
+  }).then(r => r.json());
   if (data.ok) {
     state[lid].images = state[lid].images.filter(i => i.fname !== fname);
-    renderGrid(lid);
-    updateAll();
-    showToast('🗑 ลบรูปแล้ว');
+    renderDetailGrid(lid); updateStats(); showToast('🗑 ลบรูปแล้ว');
   }
 }
 
-// ─── Save LVSB (text fields only, images already saved on upload) ───
-async function saveLvsb(lid) {
+async function saveActive() {
+  const lid = activeId;
   const fd = new FormData();
   fd.append('lid', lid);
   fd.append('month_th', document.getElementById('month_th').value);
   fd.append('year_th', document.getElementById('year_th').value);
-  fd.append('date', document.getElementById('date-' + lid).value);
-  fd.append('kwh_prev', document.getElementById('kwh_prev-' + lid).value);
-  fd.append('kwh_curr', document.getElementById('kwh_curr-' + lid).value);
-
-  const res = await fetch('/save_lvsb', { method: 'POST', body: fd });
-  const data = await res.json();
+  fd.append('date', document.getElementById('d-date').value);
+  fd.append('kwh', document.getElementById('d-kwh').value);
+  const data = await fetch('/save_lvsb', {method:'POST', body:fd}).then(r => r.json());
   if (data.ok) {
     state[lid].saved = true;
-    updateAll();
-    showToast('💾 บันทึกตู้ ' + LVSBS.find(l=>l.id===lid).name + ' เรียบร้อย');
+    state[lid].date = document.getElementById('d-date').value;
+    state[lid].kwh  = document.getElementById('d-kwh').value;
+    document.getElementById('d-pill').style.display = 'block';
+    updateStats(); showToast('💾 บันทึกเรียบร้อย');
   }
 }
 
-// ─── Switch tab ───
-function switchTab(id) {
+async function loadState() {
+  const meta = await fetch('/get_state').then(r => r.json());
+  initMonthYear(meta.month_th, meta.year_th);
+  const ldata = meta.lvsbs || {};
   LVSBS.forEach(l => {
-    document.getElementById('panel-' + l.id).style.display = 'none';
-    document.getElementById('tab-' + l.id).classList.remove('active');
-    document.getElementById('dot-' + l.id).classList.remove('active');
+    const e = ldata[l.id] || {};
+    state[l.id].date   = e.date   || '';
+    state[l.id].kwh    = e.kwh    || '';
+    state[l.id].saved  = !!e.saved;
+    state[l.id].images = (e.images || []).map(f => ({fname:f, url:'/image/'+l.id+'/'+f}));
   });
-  document.getElementById('panel-' + id).style.display = 'block';
-  document.getElementById('tab-' + id).classList.add('active');
-  document.getElementById('dot-' + id).classList.add('active');
-  activeTab = id;
+  updateStats(); renderList();
 }
 
-// ─── Update all UI indicators ───
-function updateAll() {
+function updateStats() {
   const done = LVSBS.filter(l => state[l.id].saved).length;
-  const totalImgs = LVSBS.reduce((s,l) => s + state[l.id].images.length, 0);
+  const imgs = LVSBS.reduce((s, l) => s + state[l.id].images.length, 0);
   document.getElementById('st-done').textContent = done;
   document.getElementById('st-pend').textContent = LVSBS.length - done;
-  document.getElementById('st-imgs').textContent = totalImgs;
-  document.getElementById('prog-text').innerHTML = `<strong>${done}</strong> / ${LVSBS.length} ตู้บันทึกแล้ว`;
-
-  LVSBS.forEach(l => {
-    const s = state[l.id];
-    const dot = document.getElementById('dot-' + l.id);
-    const tab = document.getElementById('tab-' + l.id);
-    const pill = document.getElementById('pill-' + l.id);
-    dot.classList.toggle('done', s.saved);
-    tab.classList.toggle('done', s.saved);
-    pill.style.display = s.saved ? 'block' : 'none';
-  });
+  document.getElementById('st-imgs').textContent = imgs;
+  document.getElementById('prog-fill').style.width = (done / LVSBS.length * 100).toFixed(1) + '%';
+  document.getElementById('prog-label').textContent = done + ' / ' + LVSBS.length + ' ตู้';
 }
 
 async function confirmReset() {
-  if (!confirm('ล้างข้อมูลและรูปภาพทั้งหมด? (ไม่สามารถกู้คืนได้)')) return;
-  await fetch('/reset', {method:'POST'});
-  location.reload();
+  if (!confirm('ล้างข้อมูลและรูปภาพทั้งหมด?')) return;
+  await fetch('/reset', {method:'POST'}); location.reload();
 }
 
-// ─── Init ───
 loadState();
 </script>
 </body>
 </html>
-
