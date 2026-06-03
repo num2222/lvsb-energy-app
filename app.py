@@ -388,22 +388,20 @@ def save_lvsb():
         fname     = f'{idx:02d}_{clean_filename}.jpg'
         public_id = f'{lid}_{idx:02d}'
 
+        # บันทึกภาพลง Local Storage ของเซิร์ฟเวอร์เสมอก่อนเพื่อเป็นตัวสำรองหลักสำหรับการแทรกไฟล์ Excel
+        fpath = os.path.join(img_dir(lid, mk), fname)
+        with open(fpath, 'wb') as out:
+            out.write(img_bytes)
+
         if cloudinary_enabled():
             url = upload_to_cloudinary(img_bytes, public_id)
             print(f'[Cloudinary] upload {fname} -> {url}')
             if url:
                 saved_imgs.append({'fname': fname, 'cloudinary_url': url, 'public_id': public_id})
             else:
-                # Fallback: save local
-                fpath = os.path.join(img_dir(lid, mk), fname)
-                with open(fpath, 'wb') as out:
-                    out.write(img_bytes)
                 saved_imgs.append({'fname': fname, 'cloudinary_url': None, 'public_id': None})
                 print(f'[Cloudinary] failed, saved locally: {fname}')
         else:
-            fpath = os.path.join(img_dir(lid, mk), fname)
-            with open(fpath, 'wb') as out:
-                out.write(img_bytes)
             saved_imgs.append({'fname': fname, 'cloudinary_url': None, 'public_id': None})
 
     entry['images'] = saved_imgs
@@ -429,9 +427,10 @@ def delete_image():
                 delete_from_cloudinary(img_info['public_id'])
             elif img_info.get('drive_id'):
                 delete_from_drive(img_info['drive_id'])
-            else:
-                fpath = os.path.join(img_dir(lid, mk), fname)
-                if os.path.exists(fpath): os.remove(fpath)
+            
+            # ลบไฟล์ที่ Local Storage ด้วยเพื่อความสะอาดเรียบร้อย
+            fpath = os.path.join(img_dir(lid, mk), fname)
+            if os.path.exists(fpath): os.remove(fpath)
         else:
             fpath = os.path.join(img_dir(lid, mk), fname)
             if os.path.exists(fpath): os.remove(fpath)
@@ -453,10 +452,11 @@ def get_state():
         cur_mk = mk or month_key(meta.get('month_th',''), meta.get('year_th',''))
         for img in entry.get('images', []):
             fname = img.get('fname', '') if isinstance(img, dict) else img
+            # คืนค่ากลับไปเป็นก้อนวัตถุตามโครงสร้างใน meta.json เพื่อให้ฟังก์ชันการส่งออกนำไปใช้งานต่อได้อย่างถูกต้อง
             if isinstance(img, dict):
                 if (img.get('cloudinary_url') or img.get('drive_id') or
                         os.path.exists(os.path.join(img_dir(lid, cur_mk), fname))):
-                    valid.append(fname)
+                    valid.append(img)
             elif os.path.exists(os.path.join(img_dir(lid, cur_mk), img)):
                 valid.append(img)
         entry['images'] = valid
