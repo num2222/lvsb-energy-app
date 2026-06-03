@@ -452,10 +452,11 @@ def get_state():
         valid = []
         cur_mk = mk or month_key(meta.get('month_th',''), meta.get('year_th',''))
         for img in entry.get('images', []):
+            fname = img.get('fname', '') if isinstance(img, dict) else img
             if isinstance(img, dict):
                 if (img.get('cloudinary_url') or img.get('drive_id') or
-                        os.path.exists(os.path.join(img_dir(lid, cur_mk), img.get('fname','')))):
-                    valid.append(img)
+                        os.path.exists(os.path.join(img_dir(lid, cur_mk), fname))):
+                    valid.append(fname)
             elif os.path.exists(os.path.join(img_dir(lid, cur_mk), img)):
                 valid.append(img)
         entry['images'] = valid
