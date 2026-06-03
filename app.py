@@ -3,7 +3,7 @@ import openpyxl
 from openpyxl.drawing.image import Image as XLImage
 from openpyxl.drawing.spreadsheet_drawing import TwoCellAnchor, AnchorMarker
 from PIL import Image as PILImage
-import io, os, re, json, shutil, base64, tempfile
+import io, os, json, shutil, base64, tempfile
 import urllib.request
 from datetime import datetime
 
@@ -97,7 +97,7 @@ LVSBS = [
     {'id': '11',  'name': 'SS5-5-LVSB2',                   'sheet': '11_SS5-5-LVSB2'},
     {'id': '12',  'name': 'SS5-5-LVSB3',                   'sheet': '12_SS5-5-LVSB3'},
     {'id': '13',  'name': 'SS6-1-LVSB1',                   'sheet': '13_SS6-1-LVSB1'},
-    {'id': '14',  'name': 'SS6-1-LVSB2',                   'sheet': '14_SS6-1-LVSB2 '},
+    {'id': '14',  'name': 'SS6-1-LVSB2',                   'sheet': '14_SS6-1-LVSB2'},
     {'id': '15',  'name': 'SS6-2-LVSB1',                   'sheet': '15_SS6-2-LVSB1'},
     {'id': '16',  'name': 'SS6-2-LVSB2',                   'sheet': '16_SS6-2-LVSB2'},
     {'id': '17',  'name': 'SS6-3-LVSB1',                   'sheet': '17_SS6-3-LVSB1'},
@@ -113,11 +113,11 @@ LVSBS = [
     {'id': '27',  'name': 'SS7-1-LVSB3',                   'sheet': '27_SS7-1-LVSB3'},
     {'id': '28',  'name': 'SS7-1-LVSB4',                   'sheet': '28_SS7-1-LVSB4'},
     {'id': '29',  'name': 'SS7-2-LVSB1',                   'sheet': '29_SS7-2-LVSB1'},
-    {'id': '30',  'name': 'SS7-2-LVSB2',                   'sheet': '30_SS7-2-LVSB2 '},
+    {'id': '30',  'name': 'SS7-2-LVSB2',                   'sheet': '30_SS7-2-LVSB2'},
     {'id': '31',  'name': 'SS7-2-LVSB3',                   'sheet': '31_SS7-2-LVSB3'},
     {'id': '32',  'name': 'SS7-2-LVSB4',                   'sheet': '32_SS7-2-LVSB4'},
     {'id': '33',  'name': 'SS7-3-LVSB1',                   'sheet': '33_SS7-3-LVSB1'},
-    {'id': '34',  'name': 'SS7-3-LVSB2',                   'sheet': '34_SS7-3-LVSB2 '},
+    {'id': '34',  'name': 'SS7-3-LVSB2',                   'sheet': '34_SS7-3-LVSB2'},
     {'id': '35',  'name': 'SS7-3-LVSB3',                   'sheet': '35_SS7-3-LVSB3'},
     {'id': '36',  'name': 'SS7-3-LVSB4',                   'sheet': '36_SS7-3-LVSB4'},
     {'id': '37',  'name': 'SS7-4-LVSB1',                   'sheet': '37_SS7-4-LVSB1'},
@@ -148,70 +148,70 @@ LVSBS = [
     {'id': '62',  'name': 'SU2-3-LVSB2',                   'sheet': '62_SU2-3-LVSB2'},
     {'id': '63',  'name': 'SU2-3-LVSB3',                   'sheet': '63_SU2-3-LVSB3'},
     {'id': '64',  'name': 'SU2-3-LVSB4',                   'sheet': '64_SU2-3-LVSB4'},
-    {'id': '65',  'name': 'Unit Sub 1',                    'sheet': '65_Unit Sub 1 '},
-    {'id': '66',  'name': 'Unit Sub 2',                    'sheet': '66_Unit Sub 2 '},
-    {'id': '67',  'name': 'Field Sub 1',                   'sheet': '67_Field Sub 1 '},
-    {'id': '68',  'name': 'Field Sub 2',                   'sheet': '68_Field Sub 2 '},
-    {'id': '69',  'name': 'Field Sub 3',                   'sheet': '69_Field Sub 3 '},
-    {'id': '70',  'name': 'Field Sub 4',                   'sheet': '70_Field Sub 4 '},
+    {'id': '65',  'name': 'Unit Sub 1',                    'sheet': '65_Unit Sub 1'},
+    {'id': '66',  'name': 'Unit Sub 2',                    'sheet': '66_Unit Sub 2'},
+    {'id': '67',  'name': 'Field Sub 1',                   'sheet': '67_Field Sub 1'},
+    {'id': '68',  'name': 'Field Sub 2',                   'sheet': '68_Field Sub 2'},
+    {'id': '69',  'name': 'Field Sub 3',                   'sheet': '69_Field Sub 3'},
+    {'id': '70',  'name': 'Field Sub 4',                   'sheet': '70_Field Sub 4'},
     {'id': '71',  'name': 'Field Sub 5',                   'sheet': '71_Field Sub 5'},
     {'id': '72',  'name': 'Field Sub 6',                   'sheet': '72_Field Sub 6'},
     {'id': '73',  'name': 'Field Sub 8',                   'sheet': '73_Field Sub 8'},
-    {'id': '74',  'name': 'Field Sub 9',                   'sheet': '74_Field Sub 9 '},
+    {'id': '74',  'name': 'Field Sub 9',                   'sheet': '74_Field Sub 9'},
     {'id': '75',  'name': 'Field Sub 11',                  'sheet': '75_Field Sub 11'},
     {'id': '76',  'name': 'Field Sub 14',                  'sheet': '76_Field Sub 14'},
-    {'id': '77',  'name': 'Field Sub 15',                  'sheet': '77_Field Sub 15 '},
+    {'id': '77',  'name': 'Field Sub 15',                  'sheet': '77_Field Sub 15'},
     {'id': '78',  'name': 'Field Sub 16',                  'sheet': '78_Field Sub 16'},
-    {'id': '79',  'name': 'ZONE 2 / SS4-LVSB1',           'sheet': '79_ZONE 2 SS4-LVSB1'},
-    {'id': '80',  'name': 'ZONE 2 / SS4-LVSB2',           'sheet': '80_ZONE 2 SS4-LVSB2'},
-    {'id': '81',  'name': 'ZONE 3 / SS3-LVSB1',           'sheet': '81_ZONE 3 SS3-LVSB1'},
-    {'id': '82',  'name': 'ZONE 3 / SS3-LVSB2',           'sheet': '82_ZONE 3 SS3-LVSB2'},
-    {'id': '83',  'name': 'AMF / MDB1',                    'sheet': '83_AMF_MDB1'},
-    {'id': '84',  'name': 'AMF / MDB2',                    'sheet': '84_AMF_MDB2'},
-    {'id': '85',  'name': 'Bus Terminal / MDB',            'sheet': '85_Bus Terminal_MDB'},
-    {'id': '86',  'name': 'Water Supply / MDB10001 / MCB1','sheet': '86_Water Supply_MCB1'},
-    {'id': '87',  'name': 'Water Supply / MDB10001 / MCB2','sheet': '87_Water Supply_MCB2'},
-    {'id': '88',  'name': 'Waste Water / MDB 100001',      'sheet': '88_Waste Water_100001'},
-    {'id': '89',  'name': 'Waste Water / MDB 10B00001',    'sheet': '89_Waste Water_10B00001'},
-    {'id': '90',  'name': 'Waste Water / MDB 10B00002',    'sheet': '90_Waste Water_10B00002'},
-    {'id': '91',  'name': 'Solid Waste / MDB',             'sheet': '91_Solid Waste_MDB'},
-    {'id': '92',  'name': 'Polder East / MCC1',            'sheet': '92_Polder East_MCC1'},
-    {'id': '93',  'name': 'Polder East / MCC2',            'sheet': '93_Polder East_MCC2'},
-    {'id': '94',  'name': 'Polder West / MCC1',            'sheet': '94_Polder West_MCC1'},
-    {'id': '95',  'name': 'Polder West / MCC2',            'sheet': '95_Polder West_MCC2'},
-    {'id': '96',  'name': 'Main Station / MDB',            'sheet': '96_Main Station_MDB'},
-    {'id': '97',  'name': 'Fire Traning / MDB1',           'sheet': '97_Fire Traning_MDB1'},
-    {'id': '98',  'name': 'AIMS / MDB1',                   'sheet': '98_AIMS_MDB1'},
-    {'id': '99',  'name': 'AIMS / MDB2',                   'sheet': '99_AIMS_MDB2'},
-    {'id': '100', 'name': 'AOB / MDB1',                    'sheet': '100_AOB_MDB1'},
-    {'id': '101', 'name': 'AOB / MDB2',                    'sheet': '101_AOB_MDB2'},
-    {'id': '102', 'name': 'อาคารพักเวร / MDB',            'sheet': '102_ห้องเวร_MDB'},
-    {'id': '103', 'name': 'CE / MDB-CE1',                  'sheet': '103_CE_MDB-CE1'},
-    {'id': '104', 'name': 'CI / MDB-CI1',                  'sheet': '104_CI_MDB-CI1'},
-    {'id': '105', 'name': 'BC1 / MDB',                     'sheet': '105_BC1_MDB'},
-    {'id': '106', 'name': 'BC2-P2 / MDB-P2-A',             'sheet': '106_BC2-P2_MDB-P2-A'},
-    {'id': '107', 'name': 'BC2-P2 / MDB-P2-B',             'sheet': '107_BC2-P2_MDB-P2-B'},
-    {'id': '108', 'name': 'P1 / MDB-P1-A',                 'sheet': '108_P1_MDB-P1-A'},
-    {'id': '109', 'name': 'P1 / MDB-P1-B',                 'sheet': '109_P1_ MDB-P1-B'},
-    {'id': '110', 'name': 'P1 / CL',                       'sheet': '110_P1_CL'},
-    {'id': '111', 'name': 'AO-1 / MDB-AO-A',               'sheet': '111_AO-1_MDB-AO-A'},
-    {'id': '112', 'name': 'AO-1 / MDB-AO-B',               'sheet': '112_AO-1_MDB-AO-B'},
-    {'id': '113', 'name': 'AO-2 / MDB-AO-A',               'sheet': '113_AO-2_MDB-AO-A'},
-    {'id': '114', 'name': 'AO-2 / MDB-AO-B',               'sheet': '114_AO-2_MDB-AO-B'},
-    {'id': '115', 'name': 'AO-3 / MDB-AO-A',               'sheet': '115_AO-3_MDB-AO-A'},
-    {'id': '116', 'name': 'AO-3 / MDB-AO-B',               'sheet': '116_AO-3_MDB-AO-B'},
-    {'id': '117', 'name': 'AO-4 / MDB-AO-A',               'sheet': '117_AO-4_MDB-AO-A'},
-    {'id': '118', 'name': 'AO-4 / MDB-AO-B',               'sheet': '118_AO-4_MDB-AO-B'},
-    {'id': '119', 'name': 'S1 / MDB-S1A',                  'sheet': '119_S1_MDB-S1A'},
-    {'id': '120', 'name': 'S1 / MDB-S1B',                  'sheet': '120_S1_MDB-S1B'},
-    {'id': '121', 'name': 'Ware House1 / MDB-WH-A',        'sheet': '121_WH1_MDB-WH-A'},
-    {'id': '122', 'name': 'Ware House1 / MDB-WH-B',        'sheet': '122_WH1_MDB-WH-B'},
-    {'id': '123', 'name': 'Ware House2 / MDB-WH-A',        'sheet': '123_WH2_MDB-WH-A'},
-    {'id': '124', 'name': 'Ware House2 / MDB-WH-B',        'sheet': '124_WH2_MDB-WH-B'},
-    {'id': '125', 'name': 'Ware House3 / MDB-WH-A',        'sheet': '125_WH3_MDB-WH-A'},
-    {'id': '126', 'name': 'Ware House3 / MDB-WH-B',        'sheet': '126_WH3_MDB-WH-B'},
-    {'id': '127', 'name': 'Ware House4 / MDB-WH-A',        'sheet': '127_WH4_MDB-WH-A'},
-    {'id': '128', 'name': 'Ware House4 / MDB-WH-B',        'sheet': '128_WH4_MDB-WH-B'},
+    {'id': '79',  'name': 'ZONE 2 / SS4-LVSB1',           'sheet': '79_ZONE 2 - SS4-LVSB1'},
+    {'id': '80',  'name': 'ZONE 2 / SS4-LVSB2',           'sheet': '80_ZONE 2 - SS4-LVSB2'},
+    {'id': '81',  'name': 'ZONE 3 / SS3-LVSB1',           'sheet': '81_ZONE 3 - SS3-LVSB1'},
+    {'id': '82',  'name': 'ZONE 3 / SS3-LVSB2',           'sheet': '82_ZONE 3 - SS3-LVSB2'},
+    {'id': '83',  'name': 'AMF / MDB1',                    'sheet': '83_AMF - MDB1'},
+    {'id': '84',  'name': 'AMF / MDB2',                    'sheet': '84_AMF - MDB2'},
+    {'id': '85',  'name': 'Bus Terminal / MDB',            'sheet': '85_Bus Terminal - MDB'},
+    {'id': '86',  'name': 'Water Supply / MDB10001 / MCB1','sheet': '86_Water Supply - MDB10001 - MC'},
+    {'id': '87',  'name': 'Water Supply / MDB10001 / MCB2','sheet': '87_Water Supply - MDB10001 - MC'},
+    {'id': '88',  'name': 'Waste Water / MDB 100001',      'sheet': '88_Waste Water - MDB 100001'},
+    {'id': '89',  'name': 'Waste Water / MDB 10B00001',    'sheet': '89_Waste Water - MDB 10B00001'},
+    {'id': '90',  'name': 'Waste Water / MDB 10B00002',    'sheet': '90_Waste Water - MDB 10B00002'},
+    {'id': '91',  'name': 'Solid Waste / MDB',             'sheet': '91_Solid Waste - MDB'},
+    {'id': '92',  'name': 'Polder East / MCC1',            'sheet': '92_Polder East - MCC1'},
+    {'id': '93',  'name': 'Polder East / MCC2',            'sheet': '93_Polder East - MCC2'},
+    {'id': '94',  'name': 'Polder West / MCC1',            'sheet': '94_Polder West - MCC1'},
+    {'id': '95',  'name': 'Polder West / MCC2',            'sheet': '95_Polder West - MCC2'},
+    {'id': '96',  'name': 'Main Station / MDB',            'sheet': '96_Main Station - MDB'},
+    {'id': '97',  'name': 'Fire Traning / MDB1',           'sheet': '97_Fire Traning - MDB1'},
+    {'id': '98',  'name': 'AIMS / MDB1',                   'sheet': '98_AIMS - MDB1'},
+    {'id': '99',  'name': 'AIMS / MDB2',                   'sheet': '99_AIMS - MDB2'},
+    {'id': '100', 'name': 'AOB / MDB1',                    'sheet': '100_AOB - MDB1'},
+    {'id': '101', 'name': 'AOB / MDB2',                    'sheet': '101_AOB - MDB2'},
+    {'id': '102', 'name': 'อาคารพักเวร / MDB',            'sheet': '102_อาคารพักเวร - MDB'},
+    {'id': '103', 'name': 'CE / MDB-CE1',                  'sheet': '103_CE - MDB-CE1'},
+    {'id': '104', 'name': 'CI / MDB-CI1',                  'sheet': '104_CI - MDB-CI1'},
+    {'id': '105', 'name': 'BC1 / MDB',                     'sheet': '105_BC1 - MDB'},
+    {'id': '106', 'name': 'BC2-P2 / MDB-P2-A',             'sheet': '106_BC2-P2 - MDB-P2-A'},
+    {'id': '107', 'name': 'BC2-P2 / MDB-P2-B',             'sheet': '107_BC2-P2 - MDB-P2-B'},
+    {'id': '108', 'name': 'P1 / MDB-P1-A',                 'sheet': '108_P1 - MDB-P1-A'},
+    {'id': '109', 'name': 'P1 / MDB-P1-B',                 'sheet': '109_P1 - MDB-P1-B'},
+    {'id': '110', 'name': 'P1 / CL',                       'sheet': '110_P1 - CL'},
+    {'id': '111', 'name': 'AO-1 / MDB-AO-A',               'sheet': '111_AO-1 - MDB-AO-A'},
+    {'id': '112', 'name': 'AO-1 / MDB-AO-B',               'sheet': '112_AO-1 - MDB-AO-B'},
+    {'id': '113', 'name': 'AO-2 / MDB-AO-A',               'sheet': '113_AO-2 - MDB-AO-A'},
+    {'id': '114', 'name': 'AO-2 / MDB-AO-B',               'sheet': '114_AO-2 - MDB-AO-B'},
+    {'id': '115', 'name': 'AO-3 / MDB-AO-A',               'sheet': '115_AO-3 - MDB-AO-A'},
+    {'id': '116', 'name': 'AO-3 / MDB-AO-B',               'sheet': '116_AO-3 - MDB-AO-B'},
+    {'id': '117', 'name': 'AO-4 / MDB-AO-A',               'sheet': '117_AO-4 - MDB-AO-A'},
+    {'id': '118', 'name': 'AO-4 / MDB-AO-B',               'sheet': '118_AO-4 - MDB-AO-B'},
+    {'id': '119', 'name': 'S1 / MDB-S1A',                  'sheet': '119_S1 - MDB-S1A'},
+    {'id': '120', 'name': 'S1 / MDB-S1B',                  'sheet': '120_S1 - MDB-S1B'},
+    {'id': '121', 'name': 'Ware House1 / MDB-WH-A',        'sheet': '121_Ware House1 - MDB-WH-A'},
+    {'id': '122', 'name': 'Ware House1 / MDB-WH-B',        'sheet': '122_Ware House1 - MDB-WH-B'},
+    {'id': '123', 'name': 'Ware House2 / MDB-WH-A',        'sheet': '123_Ware House2 - MDB-WH-A'},
+    {'id': '124', 'name': 'Ware House2 / MDB-WH-B',        'sheet': '124_Ware House2 - MDB-WH-B'},
+    {'id': '125', 'name': 'Ware House3 / MDB-WH-A',        'sheet': '125_Ware House3 - MDB-WH-A'},
+    {'id': '126', 'name': 'Ware House3 / MDB-WH-B',        'sheet': '126_Ware House3 - MDB-WH-B'},
+    {'id': '127', 'name': 'Ware House4 / MDB-WH-A',        'sheet': '127_Ware House4 - MDB-WH-A'},
+    {'id': '128', 'name': 'Ware House4 / MDB-WH-B',        'sheet': '128_Ware House4 - MDB-WH-B'},
     {'id': '129', 'name': 'SS3-5-VVIP-UDBR',               'sheet': '129_SS3-5-VVIP-UDBR'},
 ]
 
@@ -227,7 +227,7 @@ SLOT_LAYOUT = [
     dict(fr_row=51, fr_col=0,  fr_rowOff=155720, fr_colOff=341243, to_row=61, to_col=7,  to_rowOff=73346,  to_colOff=277999, w=981, h=981),
     dict(fr_row=51, fr_col=7,  fr_rowOff=155720, fr_colOff=402948, to_row=61, to_col=14, to_rowOff=73346,  to_colOff=368114, w=981, h=981),
     dict(fr_row=61, fr_col=0,  fr_rowOff=155720, fr_colOff=341243, to_row=71, to_col=7,  to_rowOff=73346,  to_colOff=277999, w=981, h=981),
-    dict(fr_row=61, fr_col=7,  fr_rowOff=155720, fr_colOff=402948, to_row=71, to_col=14, to_rowOff=73346,  to_colOff=368114, w=981, h=981),
+    dict(fr_row=61, fr_col=7,  fr_rowOff=155720, fr_colOff=402948, to_row=61, to_col=14, to_rowOff=73346,  to_colOff=368114, w=981, h=981),
 ]
 
 # ── Google Drive helpers ──────────────────────────────────────────────
@@ -383,10 +383,9 @@ def save_lvsb():
             break
         img_bytes = resize_image_square(f.read())
         idx       = len(saved_imgs)
-        # Strip existing extension, sanitize non-ASCII/special chars, add .jpg once
-        base_name = os.path.splitext(f.filename)[0]
-        safe_name = re.sub(r'[^\w\-]', '_', base_name)
-        fname     = f'{idx:02d}_{safe_name}.jpg'
+        # Clean the file name safely
+        clean_filename = f.filename.replace("/", "_")
+        fname     = f'{idx:02d}_{clean_filename}.jpg'
         public_id = f'{lid}_{idx:02d}'
 
         if cloudinary_enabled():
@@ -431,15 +430,15 @@ def delete_image():
             elif img_info.get('drive_id'):
                 delete_from_drive(img_info['drive_id'])
             else:
-                fpath = os.path.join(img_dir(lid), fname)
+                fpath = os.path.join(img_dir(lid, mk), fname)
                 if os.path.exists(fpath): os.remove(fpath)
         else:
-            fpath = os.path.join(img_dir(lid), fname)
+            fpath = os.path.join(img_dir(lid, mk), fname)
             if os.path.exists(fpath): os.remove(fpath)
         imgs.remove(img_info)
     entry['images'] = imgs
     meta['lvsbs'][lid] = entry
-    save_meta(meta)
+    save_meta(meta, mk)
     return jsonify({'ok': True, 'img_count': len(imgs)})
 
 @app.route('/get_state')
@@ -456,7 +455,7 @@ def get_state():
             if isinstance(img, dict):
                 if (img.get('cloudinary_url') or img.get('drive_id') or
                         os.path.exists(os.path.join(img_dir(lid, cur_mk), img.get('fname','')))):
-                    valid.append(img['fname'])
+                    valid.append(img)
             elif os.path.exists(os.path.join(img_dir(lid, cur_mk), img)):
                 valid.append(img)
         entry['images'] = valid
@@ -508,12 +507,13 @@ def export():
     meta     = load_meta(mk)
     month_th = meta.get('month_th', '')
     year_th  = meta.get('year_th', '')
-    # Fix: ensure mk is always a real folder key, not None
-    if mk is None and month_th and year_th:
-        mk = month_key(month_th, year_th)
+    
     wb = openpyxl.load_workbook(TEMPLATE_PATH)
     ws_main = wb['Main']
     ws_main['A1'] = f'แบบแผนงานสำรวจ  LVSB  ประจำเดือน  {month_th}   {year_th}'
+
+    # เก็บ Path ของไฟล์ Temp ที่สร้างขึ้นในกระบวนการ เพื่อจะนำมาลบหลังจากสั่งเซฟเสร็จสิ้น
+    temp_files = []
 
     export_list = [l for l in LVSBS if not lid_only or l['id'] == lid_only]
     for lvsb in export_list:
@@ -560,15 +560,16 @@ def export():
                 img_data = download_from_drive(drive_id)
 
             if img_data:
-                with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as tmp:
-                    tmp.write(img_data)
-                    tmp_path = tmp.name
+                # สร้างไฟล์ Temp ขึ้นมา ห้ามเพิ่งลบจนกว่าจะ save ตัว workbook ทั้งหมดเรียบร้อย
+                tmp = tempfile.NamedTemporaryFile(suffix='.jpg', delete=False)
+                tmp.write(img_data)
+                tmp.close()  # ปิด handle เพื่อให้ openpyxl เข้าถึงได้สมบูรณ์
+                tmp_path = tmp.name
+                temp_files.append(tmp_path)
                 try:
                     insert_image_exact(ws, tmp_path, SLOT_LAYOUT[i])
                 except Exception as e:
                     print(f'img error {fname}: {e}')
-                finally:
-                    os.unlink(tmp_path)
             else:
                 fpath = os.path.join(img_dir(lid, mk or 'default'), fname)
                 if not os.path.exists(fpath):
@@ -579,7 +580,18 @@ def export():
                     print(f'img error {fname}: {e}')
 
     out = io.BytesIO()
-    wb.save(out)
+    try:
+        # สั่งบันทึก workbook ข้อมูลรูปภาพจะถูกดึงเข้า zip archive ตรงนี้
+        wb.save(out)
+    finally:
+        # เคลียร์ไฟล์ขยะชั่วคราวทิ้งหลังจากบันทึกเสร็จสิ้น ป้องกันการเกิด FileNotFoundError
+        for tmp_path in temp_files:
+            try:
+                if os.path.exists(tmp_path):
+                    os.unlink(tmp_path)
+            except Exception as cleanup_err:
+                print(f'Error cleaning up temp file {tmp_path}: {cleanup_err}')
+
     out.seek(0)
     if lid_only:
         lvsb_name = next((l['name'] for l in LVSBS if l['id'] == lid_only), lid_only)
